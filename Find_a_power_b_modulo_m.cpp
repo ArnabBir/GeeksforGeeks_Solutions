@@ -12,7 +12,7 @@ unsigned long long int modulo(string a, int m){
 	    }
 	    return result;
 }
-
+/*
 unsigned long long int  c_power_b(unsigned long long int c, unsigned int b, unsigned int m){
     unsigned long long int result;
     if(b == 0) return 1;
@@ -22,11 +22,19 @@ unsigned long long int  c_power_b(unsigned long long int c, unsigned int b, unsi
         return result % m ;
     }
     else{
-        result =  (pow((c_power_b(c, b/2 - 1, m) % m )% m, 2) * (c % m)) ;
+        result =  (pow((c_power_b(c, b/2 - 1, m) % m ), 2) * (c % m)) ;
         return result % m;
     }
 }
+*/
 
+unsigned long long int  c_power_b(unsigned long long int c, unsigned int b, unsigned int m){
+    unsigned long long int result = c;
+    for(int i = 0; i < b - 1; ++i){
+        result = (result * c) % m;
+    }
+    return result;
+}
 int main() {
 	int T;
 	cin>>T;
