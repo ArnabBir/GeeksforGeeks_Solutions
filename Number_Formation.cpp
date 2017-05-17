@@ -46,55 +46,110 @@ void initialVarDefine(){
 }
 
 unsigned long long int get_count(int x, int y, int z){
-    if(count[x][y][z] == 0 && x * y * z){
+    if(count[x][y][z] == 0){
         count[x][y][z] = 1;
-        for(int i = 1; i <= x + y + z; ++i){
+        for(int i = x + y + z; i > y + z; --i){
             count[x][y][z] *= i;
+            count[x][y][z] /= (i - y-z);
         }
-        for(int i = 1; i <= x; ++i){
-            count[x][y][z] /= i;
-        }
-        for(int i = 1; i <= y; ++i){
-            count[x][y][z] /= i;
-        }
-        for(int i = 1; i <= z; ++i){
-            count[x][y][z] /= i;
+        for(int i = y + z; i > z; --i){
+            count[x][y][z] *= i;
+            count[x][y][z] /= (i-z);
         }
     }
-    //cout<<count[x][y][z]<<endl;
+
     return count[x][y][z];
         
 }
 
 unsigned long long int get_sum(int i, int j, int k){
     
-	                if(sum[i][j][k] == 0 && i * j * k)
+	                if(sum[i][j][k] == 0 && i * j * k){
 	                    sum[i][j][k] = (
 	                                    (10 * get_sum(i-1, j, k) + 4 * get_count(i-1, j, k)) % 1000000007
 	                                  + (10 * get_sum(i, j-1, k) + 5 * get_count(i, j-1, k)) % 1000000007
 	                                  + (10 * get_sum(i, j, k-1) + 6 * get_count(i, j, k-1)) % 1000000007
 	                             )
 	                             % 1000000007;
+	                }
+	                else if(sum[i][j][k] == 0 && i == 0){
+	                    if(j == 0){
+	                        sum[i][j][k] = (
+	                                   (10 * get_sum(i, j, k-1) + 6 * get_count(i, j, k-1)) % 1000000007
+	                                    )
+	                                   % 1000000007;  
+	                    }
+	                    else if(k == 0){
+	                        sum[i][j][k] = (
+	                                  (10 * get_sum(i, j-1, k) + 5 * get_count(i, j-1, k)) % 1000000007
+	                                    )
+	                                    % 1000000007;
+	                    }
+	                    else{
+	                        sum[i][j][k] = (
+	                                  (10 * get_sum(i, j-1, k) + 5 * get_count(i, j-1, k)) % 1000000007
+	                                  + (10 * get_sum(i, j, k-1) + 6 * get_count(i, j, k-1)) % 1000000007
+	                             )
+	                             % 1000000007;
+	                    }
+	                }
+	                else if(sum[i][j][k] == 0 && (i + j + k) != 0){
+	                    if(j == 0 && k == 0){
+	                        sum[i][j][k] = (
+	                                    (10 * get_sum(i-1, j, k) + 4 * get_count(i-1, j, k)) % 1000000007
+	                             )
+	                             % 1000000007;
+	                    }
+	                    else if(j == 0){
+	                        sum[i][j][k] = (
+	                                    (10 * get_sum(i-1, j, k) + 4 * get_count(i-1, j, k)) % 1000000007
+	                                  + (10 * get_sum(i, j, k-1) + 6 * get_count(i, j, k-1)) % 1000000007
+	                             )
+	                             % 1000000007;
+	                    }
+	                    else if(k == 0){
+	                        sum[i][j][k] = (
+	                                    (10 * get_sum(i-1, j, k) + 4 * get_count(i-1, j, k)) % 1000000007
+	                                  + (10 * get_sum(i, j-1, k) + 5 * get_count(i, j-1, k)) % 1000000007
+	                             )
+	                             % 1000000007;
+	                    }
+	                }
 	    
 	    cout<<sum[i][j][k]<<endl;
 	    return sum[i][j][k];
 }
 
-
+/*
 unsigned long long int get_result(int x, int y, int z){
     if(result[x][y][z] == 0 && x*y*z){
-	     result[x][y][z] = get_result(x-1, y, z)
-	                     + get_result(x, y-1, z)
-	                     + get_result(x, y, z-1)
-	                     + get_sum(x, y, z)
-	                     - get_result(x-1, y-1, z)
-	                     - get_result(x, y-1, z-1)
-	                     - get_result(x-1, y, z-1);
+	     result[x][y][z] = (
+	                       get_result(x-1, y, z) % 1000000007
+	                     + get_result(x, y-1, z) % 1000000007
+	                     + get_result(x, y, z-1) % 1000000007
+	                     + get_sum(x, y, z) % 1000000007
+	                     - get_result(x-1, y-1, z) % 1000000007
+	                     - get_result(x, y-1, z-1) % 1000000007
+	                     - get_result(x-1, y, z-1) % 1000000007
+	                     ) % 1000000007;
 	}
-	return result[x][y][z];
+	return result[x][y][z] % 1000000007;
 }
+*/
 
-
+unsigned long long int get_result(int x, int y, int z){
+    if(result[x][y][z] == 0){
+        for(int i = 0; i <= x; ++i){
+            for(int j = 0; j <= y; ++j){
+                for(int k = 0; k <= z; ++k){
+                    cout<<i<<" "<<j<<" "<<k<<" "<<get_sum(i, j, k)<<endl;
+                    result[x][y][z] = (result[x][y][z] + get_sum(i, j, k)) % 1000000007; 
+                }
+            }
+        }
+    }
+    return result[x][y][z] % 1000000007;
+}
 
 int main() {
     int T, x, y, z;
