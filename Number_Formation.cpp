@@ -63,8 +63,8 @@ unsigned long long int get_count(int x, int y, int z){
 }
 
 unsigned long long int get_sum(int i, int j, int k){
-    
-	                if(sum[i][j][k] == 0 && i * j * k){
+            if(sum[i][j][k] == 0){
+	                if(i * j * k){
 	                    sum[i][j][k] = (
 	                                    (10 * get_sum(i-1, j, k) + 4 * get_count(i-1, j, k)) % 1000000007
 	                                  + (10 * get_sum(i, j-1, k) + 5 * get_count(i, j-1, k)) % 1000000007
@@ -72,7 +72,8 @@ unsigned long long int get_sum(int i, int j, int k){
 	                             )
 	                             % 1000000007;
 	                }
-	                else if(sum[i][j][k] == 0 && i == 0){
+	                else if(i == 0){
+	                    if(j == 0 && k == 0)   return 0;
 	                    if(j == 0){
 	                        sum[i][j][k] = (
 	                                   (10 * get_sum(i, j, k-1) + 6 * get_count(i, j, k-1)) % 1000000007
@@ -93,7 +94,7 @@ unsigned long long int get_sum(int i, int j, int k){
 	                             % 1000000007;
 	                    }
 	                }
-	                else if(sum[i][j][k] == 0 && (i + j + k) != 0){
+	                else{
 	                    if(j == 0 && k == 0){
 	                        sum[i][j][k] = (
 	                                    (10 * get_sum(i-1, j, k) + 4 * get_count(i-1, j, k)) % 1000000007
@@ -115,8 +116,8 @@ unsigned long long int get_sum(int i, int j, int k){
 	                             % 1000000007;
 	                    }
 	                }
+            }
 	    
-	    cout<<sum[i][j][k]<<endl;
 	    return sum[i][j][k];
 }
 
@@ -142,7 +143,6 @@ unsigned long long int get_result(int x, int y, int z){
         for(int i = 0; i <= x; ++i){
             for(int j = 0; j <= y; ++j){
                 for(int k = 0; k <= z; ++k){
-                    cout<<i<<" "<<j<<" "<<k<<" "<<get_sum(i, j, k)<<endl;
                     result[x][y][z] = (result[x][y][z] + get_sum(i, j, k)) % 1000000007; 
                 }
             }
